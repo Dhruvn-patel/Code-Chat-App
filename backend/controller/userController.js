@@ -4,7 +4,6 @@ const generateToken = require("../config/generateToken")
 const signupUser = async (req, res) => {
 
     const { name, email, password, img } = req.body;
-
     if (!name || !email || !password) {
         res.status(400);
         throw new Error("Please Enter all the Feilds");
@@ -54,8 +53,9 @@ const loginuser = async (req, res) => {
             token: generateToken(user._id),
         });
     } else {
-        res.status(401);
-        throw new Error("Invalid Email or Password");
+        return res.status(401).send("Invalid Email or Password")
+        // throw new Error("Invalid Email or Password");
+
     }
 }
 

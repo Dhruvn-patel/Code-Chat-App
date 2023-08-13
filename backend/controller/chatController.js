@@ -1,11 +1,10 @@
 const Chat = require("../model/chatModel");
 const User = require("../model/userModel");
 
+//POST Chat data
 const accessChat = async (req, res) => {
-
     // whose user Chat with logind user
     const { userId } = req.body;
-
 
     if (!userId) {
         console.log("UserId param not sent with request");
@@ -39,6 +38,7 @@ const accessChat = async (req, res) => {
         };
 
         try {
+            //first time chat create chat and store into full chat
             //create chat store in paritcular fullchat
             const createChat = await Chat.create(chatData);
             const fullchat = await Chat.findOne({ _id: createChat._id }).populate("users", "-password")
@@ -53,7 +53,7 @@ const accessChat = async (req, res) => {
 }
 
 
-// Doubt 
+// fetchchat Get 
 const fetchChat = async (req, res) => {
     try {
 
@@ -65,10 +65,11 @@ const fetchChat = async (req, res) => {
                         : req.user._id
                 }
             }
+            // sorting
         }).populate("users", "-password").populate("groupAdmin", "-password").populate("latestMsg").
             sort({ updatedAt: -1 }).
             then(async (result) => {
-                // send all 
+                // send match users details and result gives path and details
                 result = await User.populate(result, {
                     path: "latestMsg.sender",
                     select: "name pic email",
